@@ -164,6 +164,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  text.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      amount.focus();
+    }
+  });
+
   function removeItem(id) {
     transactions = transactions.filter((transaction) => transaction.id !== id);
     init();
@@ -180,4 +187,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   init();
+
 });
