@@ -68,12 +68,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
+  // Open Exchange Rates API 
+
+  const apiKey = 'https://openexchangerates.org/api/latest.json?app_id=4bab4c5c56424cee9e28fa175d399796'; 
   const baseCurrency = 'USD';
 
   const convertToLocalCurrencyButton = document.getElementById("convertToLocalCurrency");
   const convertToUSDButton = document.getElementById("convertToUSD");
   const autoConvertButton = document.getElementById("autoConvert");
+  const amountInput = document.getElementById("amount"); // Assuming your input field has the id "amount"
 
   async function fetchExchangeRates(targetCurrency) {
     try {
@@ -86,30 +89,67 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  async function convertCurrency(targetCurrency) {
-    const amountInUSD = /* Your logic to get the amount */;
-    
-    const exchangeRate = await fetchExchangeRates(targetCurrency);
+  function getAmountInput() {
+    const amountInUSD = parseFloat(amountInput.value);
 
-    if (exchangeRate) {
+    if (isNaN(amountInUSD)) {
+      alert("Please enter a valid numeric amount.");
+      return null; // Return null to indicate an invalid input
+    }
+
+    return amountInUSD;
+  }
+
+  convertToLocalCurrencyButton.addEventListener("click", function () {
+    const targetCurrency = 'KES';
+    const amountInUSD = getAmountInput();
+
+    if (amountInUSD !== null) {
+      convertCurrency(targetCurrency, amountInUSD);
+    }
+  });
+
+  convertToUSDButton.addEventListener("click", function () {
+    const targetCurrency = 'USD';
+    const amountInUSD = getAmountInput();
+
+    if (amountInUSD !== null) {
+      convertCurrency(targetCurrency, amountInUSD);
+    }
+  });
+
+  autoConvertButton.addEventListener("click", function () {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async function (position) {
+        const { latitude, longitude } = position.coords;
+
+        const locationResponse = await fetch(`https://geocode.xyz/${latitude},${longitude}?json=1`);
+        const locationData = await locationResponse.json();
+
+        const localCurrencyCode = locationData.currency.code;
+        const amountInUSD = getAmountInput();
+
+        if (amountInUSD !== null) {
+          convertCurrency(localCurrencyCode, amountInUSD);
+        }
+      }, function (error) {
+        console.error('Error getting user location:', error.message);
+      });
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  });
+
+  async function convertCurrency(targetCurrency, amountInUSD) {
+    const exchangeRate = await fetchExchangeRates(targetCurrency);
+  
+    if (exchangeRate !== null) {
       const convertedAmount = amountInUSD * exchangeRate;
       console.log(`Converted amount to ${targetCurrency}: ${convertedAmount}`);
       // Update your UI or perform further actions with the converted amount
     }
   }
-
-  convertToLocalCurrencyButton.addEventListener("click", function () {
-    const targetCurrency = /* Replace with your local currency code */;
-    convertCurrency(targetCurrency);
-  });
-
-  convertToUSDButton.addEventListener("click", function () {
-    const targetCurrency = 'USD';
-    convertCurrency(targetCurrency);
-  });
-
   
-
   list.addEventListener("click", function (e) {
     if (e.target.classList.contains("fa-trash-can")) {
       const transactionId = parseInt(e.target.getAttribute("data-id"));
