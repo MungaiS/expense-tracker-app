@@ -233,3 +233,34 @@ body {
 .history-box li.minus i.fa-trash-can:hover {
   color: darkred;
 }
+
+.currency-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.currency-buttons button {
+  padding: 15px;
+  font-size: 16px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.currency-buttons button:hover {
+  background-color: #2980b9;
+}
+
+/* Style for auto-convert button */
+#autoConvert {
+  background-color: #2ecc71;
+  color: #fff;
+}
+
+#autoConvert:hover {
+  background-color: #27ae60;
+}
