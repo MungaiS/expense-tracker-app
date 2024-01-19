@@ -68,6 +68,48 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
+  const baseCurrency = 'USD';
+
+  const convertToLocalCurrencyButton = document.getElementById("convertToLocalCurrency");
+  const convertToUSDButton = document.getElementById("convertToUSD");
+  const autoConvertButton = document.getElementById("autoConvert");
+
+  async function fetchExchangeRates(targetCurrency) {
+    try {
+      const response = await fetch(`https://open.er-api.com/v6/latest/${baseCurrency}?apikey=${apiKey}`);
+      const data = await response.json();
+      const exchangeRate = data.rates[targetCurrency];
+      return exchangeRate;
+    } catch (error) {
+      console.error('Error fetching exchange rates:', error);
+    }
+  }
+
+  async function convertCurrency(targetCurrency) {
+    const amountInUSD = /* Your logic to get the amount */;
+    
+    const exchangeRate = await fetchExchangeRates(targetCurrency);
+
+    if (exchangeRate) {
+      const convertedAmount = amountInUSD * exchangeRate;
+      console.log(`Converted amount to ${targetCurrency}: ${convertedAmount}`);
+      // Update your UI or perform further actions with the converted amount
+    }
+  }
+
+  convertToLocalCurrencyButton.addEventListener("click", function () {
+    const targetCurrency = /* Replace with your local currency code */;
+    convertCurrency(targetCurrency);
+  });
+
+  convertToUSDButton.addEventListener("click", function () {
+    const targetCurrency = 'USD';
+    convertCurrency(targetCurrency);
+  });
+
+  
+
   list.addEventListener("click", function (e) {
     if (e.target.classList.contains("fa-trash-can")) {
       const transactionId = parseInt(e.target.getAttribute("data-id"));
