@@ -1,5 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", function () {
+  // DOM elements
   const balance = document.getElementById("balance");
   const moneyPlus = document.getElementById("income");
   const moneyMinus = document.getElementById("expense");
@@ -10,11 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const convertToLocalCurrencyButton = document.getElementById("convertToLocalCurrency");
   const convertToUSDButton = document.getElementById("convertToUSD");
   const autoConvertButton = document.getElementById("autoConvert");
+
+  // Retrieve transactions from local storage or initialize an empty array
   const localStorageTransactions = JSON.parse(localStorage.getItem("transactions"));
-  const apiKey = 'https://openexchangerates.org/api/latest.json?app_id=4bab4c5c56424cee9e28fa175d399796';
+  const transactions = localStorageTransactions !== null ? localStorageTransactions : [];
 
-  let transactions = localStorageTransactions !== null ? localStorageTransactions : [];
-
+  // Function to add a transaction to the DOM
   function addTransactionDOM(transaction) {
     const sign = transaction.amount > 0 ? "+" : "-";
     const icon = transaction.amount > 0 ? "up" : "down";
@@ -29,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
     list.appendChild(item);
   }
 
+  // Function to update the displayed values (balance, income, expense)
   function updateValue() {
     const amounts = transactions.map((item) => item.amount);
     const total = amounts.reduce((a, b) => a + b, 0).toFixed(2);
@@ -40,10 +43,12 @@ document.addEventListener("DOMContentLoaded", function () {
     moneyMinus.innerHTML = `$${Math.abs(expense)} <i class="fa-solid fa-caret-down"></i>`;
   }
 
+  // Generate a random transaction ID
   function randomId() {
     return Math.floor(Math.random() * 1000);
   }
 
+  // Event listener for the form submission
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -66,9 +71,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Fetch exchange rates from Open Exchange Rates API
   async function fetchExchangeRates(targetCurrency) {
     try {
-      const response = await fetch(`https://open.er-api.com/v6/latest/USD?apikey=https://openexchangerates.org/api/latest.json?app_id=4bab4c5c56424cee9e28fa175d399796`);
+      const response = await fetch(`https://open.er-api.com/v6/latest/USD?apikey=YOUR_API_KEY`);
       const data = await response.json();
       const exchangeRate = data.rates[targetCurrency];
       return exchangeRate;
@@ -78,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Function to convert currency
   async function convertCurrency(targetCurrency, amountInUSD) {
     const exchangeRate = await fetchExchangeRates(targetCurrency);
 
@@ -88,6 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Event listeners for currency conversion buttons
   convertToLocalCurrencyButton.addEventListener("click", async function () {
     const targetCurrency = 'KES'; // Replace with your desired currency code
     const amountInUSD = getAmountInput();
@@ -107,13 +115,16 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   autoConvertButton.addEventListener("click", async function () {
+    // Use Geolocation API to get user's coordinates
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(async function (position) {
         const { latitude, longitude } = position.coords;
 
+        // Use reverse geocoding to get user's location details
         const locationResponse = await fetch(`https://geocode.xyz/${latitude},${longitude}?json=1`);
         const locationData = await locationResponse.json();
 
+        // Extract local currency code from location details
         const localCurrencyCode = locationData.currency.code;
         const amountInUSD = getAmountInput();
 
@@ -127,8 +138,8 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error('Geolocation is not supported by this browser.');
     }
   });
-  
 
+  // Event listener for the transaction removal (delete) icon
   list.addEventListener("click", function (e) {
     if (e.target.classList.contains("fa-trash-can")) {
       const transactionId = parseInt(e.target.getAttribute("data-id"));
@@ -136,6 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Event listener for the "Enter" key press in the text input
   text.addEventListener("keydown", function (e) {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -143,6 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Event listener for the "Enter" key press in the amount input
   amountInput.addEventListener("keydown", function (e) {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -150,15 +163,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Function to remove a transaction by ID
   function removeItem(id) {
     transactions = transactions.filter((transaction) => transaction.id !== id);
     init();
   }
 
+  // Function to update local storage with the current transactions
   function updateLocalStorage() {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }
 
+  // Function to get the numeric amount from the input and perform validation
   function getAmountInput() {
     const amountInUSD = parseFloat(amountInput.value);
 
@@ -170,11 +186,13 @@ document.addEventListener("DOMContentLoaded", function () {
     return amountInUSD;
   }
 
+  // Initialization function to render existing transactions and update values
   function init() {
     list.innerHTML = "";
     transactions.forEach(addTransactionDOM);
     updateValue();
   }
 
+  // Initial rendering of transactions on page load
   init();
 });
