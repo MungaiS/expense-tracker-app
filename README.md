@@ -57,32 +57,38 @@ Copy code
 cd expense-tracker-app
 Open the index.html file in your preferred web browser.
 
-Usage
+##Usage
 Open the application in your web browser.
 
-Adding Transactions:
+### 1. Adding Transactions:
 
 Enter a description in the "Insert text here" field.
 Enter the amount in the "Insert amount here" field.
 Click the "Add Transaction" button.
-Viewing Transaction History:
+
+### 2. Viewing Transaction History:
 
 Scroll down to the "History" section to see a list of your transactions.
-Currency Conversion:
+
+### 3. Currency Conversion:
 
 Use the "Convert to Local Currency" and "Convert to USD" buttons to convert transaction amounts.
 Currency Conversion
-The application leverages the Open Exchange Rates API for real-time currency conversion. Replace the placeholder API key in the JavaScript code with your actual Open Exchange Rates API key.
 
-javascript
-Copy code
-const apiKey = 'https://openexchangerates.org/api/latest.json?app_id=4bab4c5c56424cee9e28fa175d399796';
-Contributing
+## API KEY 
+
+The application leverages the Open Exchange Rates API for real-time currency conversion. 
+
+'https://openexchangerates.org/api/latest.json?app_id=4bab4c5c56424cee9e28fa175d399796';
+
+## Contributing
 Contributions are welcome! If you have ideas for new features, improvements, or bug fixes, please feel free to open an issue or submit a pull request.
 
-License
+##License
 This project is licensed under the MIT License.
 
-Acknowledgments
+##Acknowledgments
 Special thanks to Open Exchange Rates for providing the API used for currency conversion.
+
+## Icons
 Icons used in the application are from Font Awesome.
