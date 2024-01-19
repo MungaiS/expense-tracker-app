@@ -77,9 +77,15 @@ Currency Conversion
 
 ## API KEY 
 
-The application leverages the Open Exchange Rates API for real-time currency conversion. 
+The application leverages on two APIs. 
+
+### 1. The Open Exchange Rates API for real-time currency conversion. 
 
 'https://openexchangerates.org/api/latest.json?app_id=4bab4c5c56424cee9e28fa175d399796';
+
+### 2. A geolocator API for getting the current location using longitude and latitude.
+
+'https://geocode.xyz/${latitude},${longitude}?json=1'
 
 ## Contributing
 Contributions are welcome! If you have ideas for new features, improvements, or bug fixes, please feel free to open an issue or submit a pull request.
